@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅智 - 旅游攻略智能助手</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🗺️</span>
+                    <h1>旅智</h1>
+                </div>
+                <p class="subtitle">旅游攻略智能助手</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-panel="chat">
+                    <span class="nav-icon">💬</span>
+                    <span>智能对话</span>
+                </button>
+                <button class="nav-btn" data-panel="guides">
+                    <span class="nav-icon">📋</span>
+                    <span>攻略列表</span>
+                </button>
+                <button class="nav-btn" data-panel="add">
+                    <span class="nav-icon">➕</span>
+                    <span>添加攻略</span>
+                </button>
+                <button class="nav-btn" data-panel="about">
+                    <span class="nav-icon">ℹ️</span>
+                    <span>关于</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="clearChat" class="btn-secondary">🗑️ 清空对话</button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 聊天面板 -->
+            <div id="chatPanel" class="panel active">
+                <div class="panel-header">
+                    <h2>💬 智能对话</h2>
+                    <p>问我任何关于旅游攻略的问题</p>
+                </div>
+                
+                <div id="chatMessages" class="chat-messages">
+                    <!-- 消息会动态插入这里 -->
+                </div>
+                
+                <div class="chat-input-area">
+                    <div class="quick-actions">
+                        <button class="quick-btn" data-msg="推荐一个适合春天去的地方">🌸 春游推荐</button>
+                        <button class="quick-btn" data-msg="有什么预算不高的旅游目的地？">💰 平价旅行</button>
+                        <button class="quick-btn" data-msg="列出所有可用的旅游攻略">📋 所有攻略</button>
+                        <button class="quick-btn" data-msg="成都有什么好吃的？">🍜 成都美食</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea id="chatInput" placeholder="输入你的问题，比如：我想去云南玩，有什么推荐？" rows="1"></textarea>
+                        <button id="sendBtn" class="send-btn">
+                            <span>发送</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 攻略列表面板 -->
+            <div id="guidesPanel" class="panel">
+                <div class="panel-header">
+                    <h2>📋 攻略列表</h2>
+                    <p>浏览所有可用的旅游攻略</p>
+                </div>
+                <div id="guidesList" class="guides-grid">
+                    <!-- 攻略卡片会动态插入这里 -->
+                </div>
+            </div>
+
+            <!-- 添加攻略面板 -->
+            <div id="addPanel" class="panel">
+                <div class="panel-header">
+                    <h2>➕ 添加新攻略</h2>
+                    <p>分享你的旅行经验</p>
+                </div>
+                <form id="addGuideForm" class="guide-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="destination">目的地 *</label>
+                            <input type="text" id="destination" name="destination" required placeholder="如：杭州">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">攻略标题 *</label>
+                            <input type="text" id="title" name="title" required placeholder="如：杭州三日游攻略">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="days">天数 *</label>
+                            <input type="number" id="days" name="days" required min="1" max="30" placeholder="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="budget">预算</label>
+                            <select id="budget" name="budget">
+                                <option value="低">低</option>
+                                <option value="中等" selected>中等</option>
+                                <option value="中高">中高</option>
+                                <option value="较高">较高</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="season">适合季节</label>
+                            <select id="season" name="season">
+                                <option value="春季">春季</option>
+                                <option value="夏季">夏季</option>
+                                <option value="秋季">秋季</option>
+                                <option value="冬季">冬季</option>
+                                <option value="四季皆宜" selected>四季皆宜</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tags">标签（逗号分隔）</label>
+                        <input type="text" id="tags" name="tags" placeholder="如：美食, 自然风光, 历史文化">
+                    </div>
+                    <div class="form-group">
+                        <label for="summary">简介 *</label>
+                        <textarea id="summary" name="summary" rows="3" required placeholder="简要介绍这个目的地..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="transport">交通建议</label>
+                        <textarea id="transport" name="transport" rows="2" placeholder="如何到达、当地交通..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="accommodation">住宿建议</label>
+                        <textarea id="accommodation" name="accommodation" rows="2" placeholder="推荐住宿区域或酒店..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimated_cost">预估费用</label>
+                        <input type="text" id="estimated_cost" name="estimated_cost" placeholder="如：人均3000-5000元">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">✅ 提交攻略</button>
+                        <button type="reset" class="btn-secondary">🔄 重置</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 关于面板 -->
+            <div id="aboutPanel" class="panel">
+                <div class="panel-header">
+                    <h2>ℹ️ 关于旅智</h2>
+                    <p>旅游攻略智能体项目介绍</p>
+                </div>
+                <div class="about-content">
+                    <div class="about-card">
+                        <h3>🗺️ 旅智 - 旅游攻略智能助手</h3>
+                        <p>本项目是一个基于大语言模型和LangChain框架开发的旅游攻略智能体，能够为用户提供旅游攻略的推荐、咨询和管理服务。</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>🔧 技术栈</h3>
+                        <ul>
+                            <li><strong>大模型框架：</strong>LangChain + LangChain Agent</li>
+                            <li><strong>后端：</strong>Python + Flask</li>
+                            <li><strong>前端：</strong>HTML5 + CSS3 + JavaScript</li>
+                            <li><strong>向量数据库：</strong>ChromaDB</li>
+                            <li><strong>大模型：</strong>支持OpenAI兼容接口（智谱GLM、通义千问等）</li>
+                            <li><strong>工具协议：</strong>MCP (Model Context Protocol)</li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <h3>✨ 核心功能</h3>
+                        <ul>
+                            <li>🤖 智能对话 - 自然语言交互，智能推荐攻略</li>
+                            <li>🔍 多维搜索 - 按目的地、标签、预算、季节搜索</li>
+                            <li>📋 攻略浏览 - 浏览所有可用的旅游攻略</li>
+                            <li>➕ 攻略添加 - 用户可添加新的旅游攻略</li>
+                            <li>🔌 MCP服务 - 支持MCP协议，可被其他AI应用调用</li>
+                            <li>📊 RAG检索 - 基于向量数据库的语义检索</li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <h3>📚 使用指南</h3>
+                        <ol>
+                            <li>在「智能对话」中输入你的旅游问题</li>
+                            <li>系统会自动搜索并推荐合适的攻略</li>
+                            <li>你也可以在「攻略列表」中浏览所有攻略</li>
+                            <li>如果有新的旅行经验，可以在「添加攻略」中分享</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 攻略详情弹窗 -->
+    <div id="guideModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div id="guideDetail" class="guide-detail">
+                <!-- 攻略详情会动态插入这里 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
